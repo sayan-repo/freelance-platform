@@ -7,25 +7,42 @@ export const getAdminDashboard = (req, res) => {
         totalProjects: projects.length,
         totalBids: bids.length,
         openDisputes: disputes.filter(d => d.status === 'open').length,
-        recentUsers: users.slice(-5).reverse(),
-        recentProjects: projects.slice(-5).reverse(),
     });
 };
 
 // GET /api/dashboard/client
 export const getClientDashboard = (req, res) => {
     const myProjects = projects.filter(p => p.clientId === req.user.id);
-    const projectsWithBids = myProjects.map(p => ({
-        ...p,
-        bidsCount: bids.filter(b => b.projectId === p.id).length
-    })).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    const projectsWithDetails = myProjects.map(project => {
+        // Find the accepted bid for this project
+        const acceptedBid = bids.find(b => b.projectId === project.id && b.status === 'accepted');
+        let freelancerInfo = null;
+
+        if (acceptedBid) {
+            // If a bid was accepted, find the freelancer who made it
+            const freelancer = users.find(u => u.id === acceptedBid.freelancerId);
+            if (freelancer) {
+                freelancerInfo = {
+                    id: freelancer.id,
+                    username: freelancer.username,
+                    walletAddress: freelancer.walletAddress // This is the crucial data
+                };
+            }
+        }
+        return {
+            ...project,
+            bidsCount: bids.filter(b => b.projectId === project.id).length,
+            hiredFreelancer: freelancerInfo // Attach the freelancer info
+        };
+    }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     res.json({
         activeProjects: myProjects.filter(p => p.status === 'in_progress').length,
         openProjects: myProjects.filter(p => p.status === 'posted').length,
         completedProjects: myProjects.filter(p => p.status === 'completed').length,
         totalSpent: myProjects.filter(p => p.status === 'completed').reduce((sum, p) => sum + p.budget, 0),
-        projects: projectsWithBids,
+        projects: projectsWithDetails,
     });
 };
 

@@ -4,12 +4,15 @@ import { BrowserRouter } from 'react-router-dom'; // Correctly imported here
 import App from './App.jsx';
 import { AuthProvider } from './contexts/AuthContext.jsx';
 import './styles/main.css';
+import { WalletProvider } from './contexts/WalletContext.jsx'; // Import new provider
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter> {/* This is the ONLY <BrowserRouter> we need */}
+    <BrowserRouter>
       <AuthProvider>
-        <App />
+        <WalletProvider> {/* Wrap AuthProvider */}
+          <App />
+        </WalletProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,

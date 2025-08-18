@@ -12,8 +12,8 @@ export let disputes = [];
 export const initializeData = async () => {
   users = [
     { id: '1', username: 'admin', email: 'admin@example.com', password: await hash('adminpass'), role: 'admin', bio: 'Site admin.', skills: ['arbitration'], rating: 5.0, completedProjects: 0, createdAt: new Date().toISOString() },
-    { id: 'client-1', username: 'TechSolutions', email: 'client@example.com', password: await hash('clientpass'), role: 'client', bio: 'Innovative tech company.', skills: [], rating: 4.8, completedProjects: 1, createdAt: new Date().toISOString() },
-    { id: 'freelancer-1', username: 'JaneDev', email: 'jane@example.com', password: await hash('freelancerpass'), role: 'freelancer', bio: 'Expert React developer.', skills: ['React', 'TypeScript', 'Next.js'], rating: 4.9, completedProjects: 15, createdAt: new Date().toISOString() },
+    { id: 'client-1', username: 'TechSolutions', email: 'client@example.com', password: await hash('clientpass'), role: 'client', walletAddress: '0x07154D40e8BA73612F136aD0bF886C1561327c44', bio: 'Innovative tech company.', skills: [], rating: 4.8, completedProjects: 1, createdAt: new Date().toISOString() },
+    { id: 'freelancer-1', username: 'JaneDev', email: 'jane@example.com', password: await hash('freelancerpass'), role: 'freelancer', walletAddress: '0x07154D40e8BA73612F136aD0bF886C1561327c44', bio: 'Expert React developer.', skills: ['React', 'TypeScript', 'Next.js'], rating: 4.9, completedProjects: 15, createdAt: new Date().toISOString() },
     { id: 'freelancer-2', username: 'MikeDesign', email: 'mike@example.com', password: await hash('freelancerpass'), role: 'freelancer', bio: 'Creative UI/UX designer.', skills: ['Figma', 'UI/UX', 'Web Design'], rating: 5.0, completedProjects: 20, createdAt: new Date().toISOString() },
   ];
 

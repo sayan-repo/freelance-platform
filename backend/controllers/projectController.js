@@ -71,3 +71,18 @@ export const updateProject = (req, res) => {
     projects[index] = { ...projects[index], ...otherUpdates };
     res.json(projects[index]);
 };
+
+export const recordPayment = (req, res) => {
+  const { projectId } = req.params;
+  const { txHash } = req.body;
+
+  const project = projects.find(p => p.id === projectId);
+  if (!project) return res.status(404).json({ error: 'Project not found' });
+
+  // In a real database, you would save the txHash and update the status
+  project.paymentTxHash = txHash;
+  project.status = 'paid'; // Or a similar status
+
+  console.log(`Payment recorded for project ${projectId}. TxHash: ${txHash}`);
+  res.status(200).json({ message: 'Payment recorded successfully', project });
+};

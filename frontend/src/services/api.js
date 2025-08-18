@@ -65,4 +65,6 @@ export const getAdminDashboard = () => api.get('/dashboard/admin');
 export const getClientDashboard = () => api.get('/dashboard/client');
 export const getFreelancerDashboard = () => api.get('/dashboard/freelancer');
 
+export const recordPayment = (projectId, data) => api.post(`/projects/${projectId}/record-payment`, data);
+
 export default api;

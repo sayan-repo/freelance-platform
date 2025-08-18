@@ -1,22 +1,20 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { useWallet } from '../../hooks/useWallet'; // <-- CORRECTED IMPORT PATH
 import Button from '../ui/Button';
 
 const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
+  const { account, connectWallet } = useWallet();
   const navigate = useNavigate();
 
   const getDashboardPath = () => {
     if (!user) return '/login';
     switch (user.role) {
-      case 'admin':
-        return '/admin-dashboard';
-      case 'client':
-        return '/client-dashboard';
-      case 'freelancer':
-        return '/freelancer-dashboard';
-      default:
-        return '/';
+      case 'admin': return '/admin-dashboard';
+      case 'client': return '/client-dashboard';
+      case 'freelancer': return '/freelancer-dashboard';
+      default: return '/';
     }
   };
 
@@ -39,10 +37,18 @@ const Header = () => {
               )}
             </nav>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center space-x-4">
+            {account ? (
+              <div className="border rounded-full px-3 py-1 text-sm text-gray-600 bg-gray-100">
+                {`${account.substring(0, 6)}...${account.substring(account.length - 4)}`}
+              </div>
+            ) : (
+              <Button onClick={connectWallet} variant="secondary" size="sm">Connect Wallet</Button>
+            )}
+
             {isAuthenticated ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-sm font-medium text-gray-700">Welcome, {user.username}</span>
+              <div className="flex items-center space-x-2">
+                <span className="text-sm font-medium text-gray-700 hidden sm:block">Welcome, {user.username}</span>
                 <Button variant="secondary" size="sm" onClick={logout}>Logout</Button>
               </div>
             ) : (
