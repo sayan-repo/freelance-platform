@@ -26,7 +26,7 @@ const AdminDashboard = () => {
     return (
         <div className="py-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-6">Admin Dashboard</h1>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 <StatCard title="Total Users" value={stats.totalUsers} />
                 <StatCard title="Total Projects" value={stats.totalProjects} />
                 <StatCard title="Total Bids" value={stats.totalBids} />

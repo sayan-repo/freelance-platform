@@ -35,3 +35,23 @@ export const getCurrentUser = async (req, res) => {
   const { password, ...userWithoutPassword } = user;
   res.json(userWithoutPassword);
 };
+
+export const registerArbitrator = async (req, res) => {
+  const { username, email, password, expertise } = req.body;
+  if (users.find(u => u.email === email)) {
+      return res.status(400).json({ message: 'Email already registered' });
+  }
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const newArbitrator = {
+      id: uuidv4(),
+      username,
+      email,
+      password: hashedPassword,
+      role: 'arbitrator',
+      expertise: typeof expertise === 'string' ? expertise.split(',').map(s => s.trim()) : [],
+  };
+  users.push(newArbitrator);
+  // In a real app, you wouldn't log them in, but for prototype purposes we will.
+  const token = generateToken(newArbitrator);
+  res.status(201).json({ token, user: { id: newArbitrator.id, username, email, role: 'arbitrator' } });
+};

@@ -34,7 +34,7 @@ const ClientDashboard = () => {
                     Post a New Project
                 </Button>
             </div>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 <StatCard title="Active Projects" value={data.activeProjects} />
                 <StatCard title="Open for Bids" value={data.openProjects} />
                 <StatCard title="Completed Projects" value={data.completedProjects} />

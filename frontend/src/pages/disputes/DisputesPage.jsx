@@ -1,57 +1,71 @@
-import { useEffect, useState } from 'react';
-import { getDisputes } from '../../services/api';
+import { useState, useEffect } from 'react';
+import { useAuth } from '../../hooks/useAuth';
+import { getDisputes, resolveDispute } from '../../services/api';
 import Loader from '../../components/ui/Loader';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '../../components/ui/Card';
-import Badge from '../../components/ui/Badge';
+import Button from '../../components/ui/Button';
+import { toast } from 'react-toastify';
 
 const DisputesPage = () => {
-  const [disputes, setDisputes] = useState([]);
-  const [loading, setLoading] = useState(true);
+    const { user } = useAuth();
+    const [disputes, setDisputes] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    getDisputes()
-      .then(data => setDisputes(data))
-      .catch(err => console.error("Failed to fetch disputes", err))
-      .finally(() => setLoading(false));
-  }, []);
+    const fetchDisputes = async () => {
+        try {
+            const data = await getDisputes();
+            setDisputes(data);
+        } catch (error) {
+            toast.error("Failed to load disputes.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  if (loading) return <Loader className="mt-20" />;
+    useEffect(() => {
+        fetchDisputes();
+    }, []);
 
-  return (
-    <div className="container py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Dispute Center</h1>
-        <p className="mt-1 text-muted-foreground">Review and manage project disputes.</p>
-      </div>
+    const handleResolve = async (disputeId, resolution) => {
+        try {
+            await resolveDispute(disputeId, { 
+                status: 'resolved', 
+                resolution: `Resolved in favor of ${resolution}.` 
+            });
+            toast.success("Dispute resolved!");
+            fetchDisputes(); // Refresh the list
+        } catch (error) {
+            toast.error("Failed to resolve dispute.");
+        }
+    };
 
-      {disputes.length > 0 ? (
-        <div className="space-y-4">
-          {disputes.map(dispute => (
-            <Card key={dispute.id}>
-              <CardHeader>
-                <div className="flex justify-between items-center">
-                  <CardTitle>Project: {dispute.project.title}</CardTitle>
-                  <Badge status={dispute.status} />
-                </div>
-                <CardDescription>
-                  Filed by {dispute.initiator.username} on {new Date(dispute.createdAt).toLocaleDateString()}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="font-semibold">Reason: {dispute.reason}</p>
-                <p className="text-muted-foreground mt-2">{dispute.description}</p>
-              </CardContent>
-            </Card>
-          ))}
+    if (loading) return <Loader />;
+
+    return (
+        <div className="max-w-5xl mx-auto py-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-6">Dispute Management</h1>
+            <div className="bg-white p-6 shadow rounded-lg">
+                {disputes.length === 0 ? (
+                    <p>No active disputes.</p>
+                ) : (
+                    <ul className="divide-y divide-gray-200">
+                        {disputes.map(dispute => (
+                            <li key={dispute.id} className="py-4">
+                                <p><strong>Project ID:</strong> {dispute.projectId}</p>
+                                <p><strong>Reason:</strong> {dispute.reason}</p>
+                                <p><strong>Status:</strong> {dispute.status}</p>
+                                {user.role === 'admin' && dispute.status === 'open' && (
+                                    <div className="mt-4 space-x-2">
+                                        <Button size="sm" onClick={() => handleResolve(dispute.id, 'Client')}>Resolve for Client</Button>
+                                        <Button size="sm" onClick={() => handleResolve(dispute.id, 'Freelancer')}>Resolve for Freelancer</Button>
+                                    </div>
+                                )}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
         </div>
-      ) : (
-        <div className="text-center py-16 border-dashed border-2 rounded-lg">
-          <h3 className="text-xl font-semibold">No Disputes Found</h3>
-          <p className="mt-2 text-muted-foreground">You are not involved in any disputes.</p>
-        </div>
-      )}
-    </div>
-  );
+    );
 };
 
 export default DisputesPage;

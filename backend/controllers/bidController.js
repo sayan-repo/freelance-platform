@@ -6,22 +6,33 @@ export const createBid = (req, res) => {
     const { amount, proposal, deliveryDays } = req.body;
     const project = projects.find(p => p.id === projectId);
     
-    if (!project) return res.status(404).json({ error: 'Project not found' });
-    if (project.clientId === req.user.id) return res.status(403).json({ error: 'Cannot bid on your own project' });
-    if (project.status !== 'posted') return res.status(400).json({ error: 'Project is not accepting bids' });
+    if (!project) return res.status(404).json({ message: 'Project not found' });
+    if (project.clientId === req.user.id) return res.status(403).json({ message: 'Cannot bid on your own project' });
+    if (project.status !== 'posted') return res.status(400).json({ message: 'Project is not accepting bids' });
 
-    const newBid = { id: uuidv4(), projectId, freelancerId: req.user.id, amount: parseFloat(amount), proposal, deliveryDays: parseInt(deliveryDays), status: 'pending', createdAt: new Date().toISOString() };
+    const newBid = {
+        id: uuidv4(),
+        projectId,
+        freelancerId: req.user.id,
+        amount: parseFloat(amount),
+        proposal,
+        deliveryDays: parseInt(deliveryDays),
+        status: 'pending',
+        createdAt: new Date().toISOString()
+    };
     bids.push(newBid);
     res.status(201).json(newBid);
 };
 
 export const acceptBid = (req, res) => {
-    const bid = bids.find(b => b.id === req.params.id);
-    if (!bid) return res.status(404).json({ error: 'Bid not found' });
-    
+    const { bidId } = req.params; // Use a more descriptive name
+    const bid = bids.find(b => b.id === bidId);
+    if (!bid) return res.status(404).json({ message: 'Bid not found' });
+
     const project = projects.find(p => p.id === bid.projectId);
-    if (project.clientId !== req.user.id) return res.status(403).json({ error: 'Unauthorized' });
-    if (project.status !== 'posted') return res.status(400).json({ error: 'Project is no longer accepting bids' });
+    // THE FIX: Ensure we use req.user.id from the authenticated user
+    if (project.clientId !== req.user.id) return res.status(403).json({ message: 'Unauthorized to accept this bid' });
+    if (project.status !== 'posted') return res.status(400).json({ message: 'Project is no longer accepting bids' });
 
     bid.status = 'accepted';
     bids.forEach(otherBid => {

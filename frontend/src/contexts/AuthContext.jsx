@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as authService from '../services/api';
-import Loader from '../components/ui/Loader'; // Ensure you have this component
+import Loader from '../components/ui/Loader';
 
 export const AuthContext = createContext(null);
 
@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
         navigate('/freelancer-dashboard');
         break;
       case 'admin':
-        navigate('/projects');
+        navigate('/admin-dashboard');
         break;
       default:
         navigate('/');
@@ -51,24 +51,19 @@ export const AuthProvider = ({ children }) => {
     const data = await authService.loginUser(credentials);
     localStorage.setItem('token', data.token);
 
-    // CORRECTED: Create the user state object from the 'data' itself, minus the token.
+    // THE FIX: Create the user state object from the 'data' itself, minus the token.
     const { token, ...userPayload } = data;
     setUser(userPayload);
     
-    // CORRECTED: Use the role directly from the 'data' object for navigation.
+    // THE FIX: Use the role directly from the 'data' object for navigation.
     navigateByRole(data.role); 
   };
 
   const register = async (userData) => {
-    // 'data' is also a flat object from the API on successful registration
     const data = await authService.registerUser(userData);
     localStorage.setItem('token', data.token);
-
-    // CORRECTED: Create the user state object from the 'data' itself
     const { token, ...userPayload } = data;
     setUser(userPayload);
-
-    // CORRECTED: Use the role directly from the 'data' object
     navigateByRole(data.role);
   };
   

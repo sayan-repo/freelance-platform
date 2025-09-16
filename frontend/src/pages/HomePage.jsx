@@ -26,7 +26,7 @@ const HomePage = () => {
         {/* CORRECTED: Content is now layered on top with a higher z-index */}
         <div className="relative z-10 container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white">
               Where Great Ideas Meet Great Talent
             </h1>
             <p className="mt-6 text-lg md:text-xl text-neutral-300 max-w-2xl mx-auto">
@@ -55,7 +55,7 @@ const HomePage = () => {
             <h2 className="text-3xl font-bold tracking-tight">How It Works</h2>
             <p className="mt-2 text-muted-foreground">Four simple steps to success.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             <FeatureCard number="01" title="Post a Project" description="Clearly define your project scope, budget, and required skills. Our intuitive form makes it easy." />
             <FeatureCard number="02" title="Receive Proposals" description="Get bids from our curated pool of talented freelancers. Compare profiles, portfolios, and ratings." />
             <FeatureCard number="03" title="Collaborate Securely" description="Hire your chosen freelancer and use our platform's tools to manage communication and milestones." />

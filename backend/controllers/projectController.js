@@ -32,28 +32,22 @@ export const getProjectById = (req, res) => {
 // --- NEW FUNCTION TO ADD ---
 // POST /api/projects
 export const createProject = (req, res) => {
-    const { title, description, budget, deadline, acceptanceCriteria, skills } = req.body;
-
-    // Basic validation
+    const { title, description, budget, deadline, skills } = req.body;
     if (!title || !description || !budget || !deadline || !skills) {
-        return res.status(400).json({ error: 'Please provide all required fields.' });
+        return res.status(400).json({ message: 'All fields are required.' });
     }
-
     const newProject = {
         id: uuidv4(),
-        clientId: req.user.id, // Get the client's ID from the authenticated user
+        clientId: req.user.id,
         title,
         description,
         budget: parseFloat(budget),
         deadline,
-        status: 'posted', // New projects are immediately open for bids
-        acceptanceCriteria: acceptanceCriteria || 'N/A',
+        status: 'posted',
         skills: typeof skills === 'string' ? skills.split(',').map(s => s.trim()) : skills,
         createdAt: new Date().toISOString()
     };
-    
-    projects.unshift(newProject); // Add to the beginning of the array
-    console.log(`Project created: ${title} by user ${req.user.username}`);
+    projects.unshift(newProject);
     res.status(201).json(newProject);
 };
 // ----------------------------

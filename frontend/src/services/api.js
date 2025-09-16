@@ -56,6 +56,14 @@ export const createBid = (projectId, data) => api.post(`/projects/${projectId}/b
 export const acceptBid = (bidId) => api.patch(`/bids/${bidId}/accept`);
 export const getFreelancerBids = () => api.get('/bids/me');
 
+// Arbitrator
+export const registerArbitrator = (userData) => api.post('/auth/register-arbitrator', userData);
+
+// Disputes
+export const createDispute = (disputeData) => api.post('/disputes', disputeData);
+export const getDisputes = () => api.get('/disputes');
+export const resolveDispute = (disputeId, resolutionData) => api.patch(`/disputes/${disputeId}/resolve`, resolutionData);
+
 // Profile & Dashboard Service
 export const updateUserProfile = (data) => api.patch('/profile', data);
 

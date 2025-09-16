@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { useWallet } from '../../hooks/useWallet'; // <-- CORRECTED IMPORT PATH
+import { useWallet } from '../../hooks/useWallet';
 import Button from '../ui/Button';
 
 const Header = () => {
@@ -31,26 +31,34 @@ const Header = () => {
                 Browse Projects
               </Link>
               {isAuthenticated && (
-                <Link to={getDashboardPath()} className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                  Dashboard
-                </Link>
+                <>
+                  <Link to={getDashboardPath()} className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                    Dashboard
+                  </Link>
+                  {/* THE FIX: Added Disputes link for logged-in users */}
+                  <Link to="/disputes" className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                    Disputes
+                  </Link>
+                </>
               )}
             </nav>
           </div>
           <div className="flex items-center space-x-4">
-            {account ? (
-              <div className="border rounded-full px-3 py-1 text-sm text-gray-600 bg-gray-100">
-                {`${account.substring(0, 6)}...${account.substring(account.length - 4)}`}
-              </div>
-            ) : (
-              <Button onClick={connectWallet} variant="secondary" size="sm">Connect Wallet</Button>
-            )}
-
             {isAuthenticated ? (
-              <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium text-gray-700 hidden sm:block">Welcome, {user.username}</span>
+              <>
+                <span className="text-sm font-medium text-gray-700 hidden sm:block">
+                  Welcome, {user.username}
+                </span>
+                {account ? (
+                  <div className="border rounded-full px-3 py-1 text-sm text-gray-600 bg-gray-100">
+                    {`${account.substring(0, 6)}...${account.substring(account.length - 4)}`}
+                  </div>
+                ) : (
+                  <Button onClick={connectWallet} variant="secondary" size="sm">Connect Wallet</Button>
+                )}
+                <span className="text-sm font-medium text-gray-700 hidden md:block">Welcome, {user.username}</span>
                 <Button variant="secondary" size="sm" onClick={logout}>Logout</Button>
-              </div>
+              </>
             ) : (
               <div className="flex items-center space-x-2">
                 <Button as={Link} to="/login" variant="secondary" size="sm">Sign In</Button>

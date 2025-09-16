@@ -17,6 +17,8 @@ import AdminDashboard from './pages/dashboard/AdminDashboard';
 import ClientDashboard from './pages/dashboard/ClientDashboard';
 import FreelancerDashboard from './pages/dashboard/FreelancerDashboard';
 import PostProjectPage from './pages/projects/PostProjectPage'; // Import the new page
+import ArbitratorRegisterPage from './pages/auth/ArbitratorRegisterPage';
+import DisputesPage from './pages/disputes/DisputesPage';
 
 const ProtectedRoute = () => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -27,7 +29,7 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-8">
+      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<HomePage />} />
@@ -35,6 +37,7 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/projects" element={<ProjectListPage />} />
           <Route path="/projects/:id" element={<ProjectDetailPage />} />
+          <Route path="/register-arbitrator" element={<ArbitratorRegisterPage />} />
           
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
@@ -44,6 +47,7 @@ function App() {
             <Route path="/client-dashboard" element={<ClientDashboard />} />
             <Route path="/freelancer-dashboard" element={<FreelancerDashboard />} />
             <Route path="/projects/new" element={<PostProjectPage />} />
+            <Route path="/disputes" element={<DisputesPage />} />
           </Route>
         </Routes>
       </main>

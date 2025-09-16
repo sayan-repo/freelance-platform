@@ -1,0 +1,14 @@
+{
+    "name": "freelance-contract",
+    "version": "1.0.0",
+    "description": "Smart contract for the freelance platform",
+    "main": "index.js",
+    "engines": {
+        "node": ">=18",
+        "npm": ">=9"
+    },
+    "dependencies": {
+        "fabric-contract-api": "^2.5.0",
+        "fabric-shim": "^2.5.0"
+    }
+}
